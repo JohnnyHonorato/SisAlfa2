@@ -1,14 +1,13 @@
 package br.com.sisalfa.DAO;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
-import br.com.sisalfa.model.User;
-
 public class teste {
-	public static void main(String[]args) throws ClassNotFoundException, SQLException {
+	public static void main(String[]args) throws ClassNotFoundException, SQLException, IOException {
 		UserDAOJDBC a = new UserDAOJDBC();
-		User user = new User();
-		user.setName("dsadsad");
-		a.insert(user);
+		a.connect();
+		System.out.println(a.isConected());
+
 	}
 }

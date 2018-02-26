@@ -11,11 +11,15 @@ import br.com.sisalfa.model.Context;
 
 public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
 
+	public ContextDAOJDBC(){
+		super();
+	}
+
 	public void insert(Context context) throws SQLException {
-		String INSERT_SQL = "insert into context(name, description, id_user) values(?, ?, ?)";
+		String insertSQL = "insert into context(name, description, id_user) values(?, ?, ?)";
 		try {
 			super.connect();
-			PreparedStatement psmtm = connection.prepareStatement(INSERT_SQL);
+			PreparedStatement psmtm = conection.prepareStatement(insertSQL);
 			psmtm.setString(1, context.getName());
 			psmtm.setString(2, context.getDescription());
 			psmtm.setInt(3, context.getIdUser());
@@ -45,19 +49,17 @@ public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
 	}
 
 	public List<Context> getAll() throws SQLException {
-		String SELECT_SQL = "select * from context;";
+		String selectSQL = "select * from context;";
 		try {
 			super.connect();
 			List<Context> contexts = new ArrayList<Context>();
 			Context context = null;
-			Statement psmtm = connection.createStatement();
-			ResultSet resultset = psmtm.executeQuery(SELECT_SQL);
+			Statement psmtm = conection.createStatement();
+			ResultSet resultset = psmtm.executeQuery(selectSQL);
 			while (resultset.next()) {
-				context = new Context();
+				context = new Context(resultset.getString("name"), resultset.getInt("id_user"));
 				context.setId(resultset.getInt("id"));
-				context.setName(resultset.getString("name"));
 				context.setDescription(resultset.getString("description"));
-				context.setIdUser(resultset.getInt("id_user"));
 				contexts.add(context);
 			}
 			super.close();
@@ -80,10 +82,10 @@ public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
 	}
 
 	public void delete(int id) throws SQLException {
-		String DELETE_SQL = "delete from context where id = ?";
+		String deleteSQL = "delete from context where id = ?";
 		try {
 			super.connect();
-			PreparedStatement psmtm = connection.prepareStatement(DELETE_SQL);
+			PreparedStatement psmtm = conection.prepareStatement(deleteSQL);
 			psmtm.setInt(1, id);
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)

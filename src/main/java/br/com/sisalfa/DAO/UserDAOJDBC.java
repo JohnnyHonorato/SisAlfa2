@@ -12,10 +12,10 @@ import br.com.sisalfa.model.User;
 public class UserDAOJDBC extends MySQLConection implements UserDAO {
 
 	public void insert(User user) throws SQLException {
-		String INSERT_SQL = "insert into user(name) values(?)";
+		String insertSQL = "insert into user(name) values(?)";
 		try {
 			super.connect();
-			PreparedStatement psmtm = connection.prepareStatement(INSERT_SQL);
+			PreparedStatement psmtm = conection.prepareStatement(insertSQL);
 			psmtm.setString(1, user.getName());
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
@@ -42,13 +42,13 @@ public class UserDAOJDBC extends MySQLConection implements UserDAO {
 	}
 
 	public List<User> getAll() throws SQLException {
-		String SELECT_SQL = "select * from user;";
+		String selectSQL = "select * from user;";
 		try {
 			super.connect();
 			List<User> users = new ArrayList<User>();
 			User user = null;
-			Statement psmtm = connection.createStatement();
-			ResultSet resultset = psmtm.executeQuery(SELECT_SQL);
+			Statement psmtm = conection.createStatement();
+			ResultSet resultset = psmtm.executeQuery(selectSQL);
 			while (resultset.next()) {
 				user = new User();
 				user.setId(resultset.getInt("id"));
@@ -65,10 +65,10 @@ public class UserDAOJDBC extends MySQLConection implements UserDAO {
 	}
 
 	public void delete(int id) throws SQLException {
-		String DELETE_SQL = "delete from user where id = ?";
+		String deleteSQL = "delete from user where id = ?";
 		try {
 			super.connect();
-			PreparedStatement psmtm = connection.prepareStatement(DELETE_SQL);
+			PreparedStatement psmtm = conection.prepareStatement(deleteSQL);
 			psmtm.setInt(1, id);
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)

@@ -4,7 +4,12 @@ public class Context {
 	private int id;
 	private String name;
 	private String description;
-	private int idUser; //id_User
+	private int idUser; // id_User
+
+	public Context(String name, int idUser) {
+		this.name = name;
+		this.idUser = idUser;
+	}
 
 	public int getId() {
 		return id;

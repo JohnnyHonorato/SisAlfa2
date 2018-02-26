@@ -1,5 +1,6 @@
 package br.com.sisalfa.DAO;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,50 +8,63 @@ import java.util.Properties;
 
 public class MySQLConection {
 
-	protected Connection connection = null;
-	Properties props = new Properties();
-	private final String DRIVER = "com.mysql.jdbc.Driver";
-	private final String URL = "jdbc:mysql://localhost:3306/sisalfa";
-	private final String USER = "root";
-	private final String PASSWORD = "1234";
+	protected Connection conection = null;
+	private String DRIVER;
+	private String URL;
+	private String USER;
+	private String PASSWORD;
 
+	public MySQLConection() {
+		Property property = new Property();
+		Properties prop;
+		try {
+			prop = property.getProp();
+			DRIVER = prop.getProperty("prop.driver");
+			URL = prop.getProperty("prop.url");
+			USER = prop.getProperty("prop.user");
+			PASSWORD = prop.getProperty("prop.password");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-	public void connect() throws ClassNotFoundException, SQLException {
-		Class.forName(DRIVER);
-		connection = DriverManager.getConnection(URL, USER, PASSWORD);
-		connection.setAutoCommit(false);
-		System.out.println("Conected!: " + connection);
 	}
 
-	public void close() throws SQLException {
-		if (connection != null) {
-			connection.close();
-			System.out.println("Close!: " + connection);
+	protected void connect() throws ClassNotFoundException, SQLException {
+		Class.forName(DRIVER);
+		conection = DriverManager.getConnection(URL, USER, PASSWORD);
+		conection.setAutoCommit(false);
+		System.out.println("Conected!: " + conection);
+	}
+
+	protected void close() throws SQLException {
+		if (conection != null) {
+			conection.close();
+			System.out.println("Close!: " + conection);
 		} else {
 			throw new SQLException("Conexao ja fechada");
 		}
 	}
 
-	public void commit() throws SQLException {
-		if ((connection != null) && (connection.getAutoCommit() == false)) {
-			connection.commit();
-			System.out.println("Commit!: " + connection);
+	protected void commit() throws SQLException {
+		if ((conection != null) && (conection.getAutoCommit() == false)) {
+			conection.commit();
+			System.out.println("Commit!: " + conection);
 		} else {
 			throw new SQLException("Impossivel commitar dados");
 		}
 	}
 
-	public void rollback() throws SQLException {
-		if ((connection != null) && (connection.getAutoCommit() == false)) {
-			connection.rollback();
-			System.out.println("RollingBack!: " + connection);
+	protected void rollback() throws SQLException {
+		if ((conection != null) && (conection.getAutoCommit() == false)) {
+			conection.rollback();
+			System.out.println("RollingBack!: " + conection);
 		} else {
 			throw new SQLException("Impossovel desfazer alteracoes");
 		}
 	}
 
-	public boolean isConected() {
-		if (this.connection != null)
+	protected boolean isConected() {
+		if (this.conection != null)
 			return true;
 		return false;
 	}

@@ -1,5 +1,6 @@
 package br.com.sisalfa.DAO;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,11 +12,12 @@ import br.com.sisalfa.model.Challenge;
 
 public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 
+
 	public void insert(Challenge challenge) throws SQLException {
-		String INSERT_SQL = "insert into challenge(id_user, id_context, name, photo) values(?, ?, ?, ?)";
+		String insertSQL = "insert into challenge(id_user, id_context, name, photo) values(?, ?, ?, ?)";
 		try {
 			super.connect();
-			PreparedStatement psmtm = connection.prepareStatement(INSERT_SQL);
+			PreparedStatement psmtm = conection.prepareStatement(insertSQL);
 			psmtm.setInt(1, challenge.getIdUser());
 			psmtm.setInt(2, challenge.getIdContext());
 			psmtm.setString(3, challenge.getName());
@@ -25,7 +27,7 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 				super.commit();
 			else {
 				super.rollback();
-				throw new SQLException("Erro Desafio nao inserido!");
+				throw new SQLException("Erro. Desafio nao inserido!");
 			}
 			super.close();
 		} catch (ClassNotFoundException e) {
@@ -44,13 +46,13 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 	}
 
 	public List<Challenge> getAll() throws SQLException {
-		String SELECT_SQL = "select * from challenge;";
+		String selectSQL = "select * from challenge;";
 		try {
 			super.connect();
 			List<Challenge> challenges = new ArrayList<Challenge>();
 			Challenge challenge = null;
-			Statement psmtm = connection.createStatement();
-			ResultSet resultset = psmtm.executeQuery(SELECT_SQL);
+			Statement psmtm = conection.createStatement();
+			ResultSet resultset = psmtm.executeQuery(selectSQL);
 			while (resultset.next()) {
 				challenge = new Challenge(resultset.getInt("id_user"), resultset.getInt("id_context"),
 						resultset.getString("name"));
@@ -88,10 +90,10 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 	}
 
 	public void delete(int id) throws SQLException {
-		String DELETE_SQL = "delete from challenge where id = ?";
+		String deleteSQL = "delete from challenge where id = ?";
 		try {
 			super.connect();
-			PreparedStatement psmtm = connection.prepareStatement(DELETE_SQL);
+			PreparedStatement psmtm = conection.prepareStatement(deleteSQL);
 			psmtm.setInt(1, id);
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)

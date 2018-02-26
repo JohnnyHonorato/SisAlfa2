@@ -82,9 +82,7 @@ public class ChallengeService {
 	@Path("addChallenge")
 	public Response addChallenge(Challenge challenge) {
 		try {
-
 			challengeBD.insert(challenge);
-
 			return Response.status(Status.OK).build();
 		} catch (SQLException e) {
 			e.printStackTrace();
