@@ -1,5 +1,6 @@
 package br.com.sisalfa.DAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,31 +10,26 @@ import java.util.List;
 
 import br.com.sisalfa.model.Context;
 
-public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
-
-	public ContextDAOJDBC(){
-		super();
-	}
+public class ContextDAOJDBC implements ContextDAO {
 
 	public void insert(Context context) throws SQLException {
 		String insertSQL = "insert into context(name, description, id_user) values(?, ?, ?)";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			PreparedStatement psmtm = conection.prepareStatement(insertSQL);
 			psmtm.setString(1, context.getName());
 			psmtm.setString(2, context.getDescription());
 			psmtm.setInt(3, context.getIdUser());
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
-				super.commit();
+				conection.commit();
 			else {
-				super.rollback();
+				conection.rollback();
 				throw new SQLException("Erro. Contexto nao inserido!");
 
 			}
-			super.close();
-		} catch (ClassNotFoundException e) {
-			super.close();
+			conection.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -51,7 +47,7 @@ public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
 	public List<Context> getAll() throws SQLException {
 		String selectSQL = "select * from context;";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			List<Context> contexts = new ArrayList<Context>();
 			Context context = null;
 			Statement psmtm = conection.createStatement();
@@ -62,10 +58,9 @@ public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
 				context.setDescription(resultset.getString("description"));
 				contexts.add(context);
 			}
-			super.close();
+			conection.close();
 			return contexts;
-		} catch (ClassNotFoundException e) {
-			super.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -84,19 +79,19 @@ public class ContextDAOJDBC extends MySQLConection implements ContextDAO {
 	public void delete(int id) throws SQLException {
 		String deleteSQL = "delete from context where id = ?";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			PreparedStatement psmtm = conection.prepareStatement(deleteSQL);
 			psmtm.setInt(1, id);
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
-				super.commit();
+				conection.commit();
 			else {
-				super.rollback();
+				conection.rollback();
 				throw new SQLException("Erro. Contexto nao deletado!");
 			}
-			super.close();
-		} catch (ClassNotFoundException e) {
-			super.close();
+			conection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

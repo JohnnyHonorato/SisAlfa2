@@ -10,13 +10,13 @@ import br.com.sisalfa.model.User;
 
 public class UserServiceTest {
 
-	Entities entities;
+	EntitiesForTests entities;
 	UserService userService;
 	int STATUS_OK = 200;
 
 	@Before
 	public void setUp() {
-		entities = new Entities();
+		entities = new EntitiesForTests();
 		userService = new UserService();
 		userService.addUser(entities.getUser());
 	}

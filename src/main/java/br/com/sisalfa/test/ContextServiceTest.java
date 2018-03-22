@@ -10,12 +10,12 @@ import br.com.sisalfa.controller.ContextService;
 public class ContextServiceTest {
 
 	ContextService contextService;
-	Entities entities; 
+	EntitiesForTests entities; 
 	int STATUS_OK = 200;
 
 	@Before
 	public void setUp() {
-		entities = new Entities();
+		entities = new EntitiesForTests();
 		contextService = new ContextService();
 		contextService.addContext(entities.getContext());
 	}

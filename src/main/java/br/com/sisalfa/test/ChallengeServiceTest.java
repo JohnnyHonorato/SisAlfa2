@@ -12,12 +12,12 @@ import br.com.sisalfa.controller.ChallengeService;
 public class ChallengeServiceTest {
 
 	ChallengeService challengeService;
-	Entities entities;
+	EntitiesForTests entities;
 	int STATUS_OK = 200;
 
 	@Before
 	public void setUp() {
-		entities = new Entities();
+		entities = new EntitiesForTests();
 		challengeService = new ChallengeService();
 		challengeService.addChallenge(entities.getChallenge());
 	}

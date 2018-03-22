@@ -12,15 +12,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+
 import com.google.gson.Gson;
 
+import br.com.sisalfa.DAO.JDBCDAOFactory;
 import br.com.sisalfa.DAO.UserDAOJDBC;
 import br.com.sisalfa.model.User;
 
 @Path("user")
 public class UserService {
 
-	private UserDAOJDBC userBD = new UserDAOJDBC();
+	private JDBCDAOFactory factory = new JDBCDAOFactory();
+	private UserDAOJDBC userBD = factory.createUserDAO();
 	private Gson gson = new Gson();
 
 	@GET
@@ -52,13 +55,8 @@ public class UserService {
 	@POST
 	@Path("addUser")
 	public Response addUser(User user) {
-		try {
-			userBD.insert(user);
-			return Response.status(Status.OK).build();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		}
+		userBD.insert(user);
+		return Response.status(Status.OK).build();
 	}
 
 	@DELETE

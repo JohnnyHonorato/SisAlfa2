@@ -15,12 +15,14 @@ import javax.ws.rs.core.Response.Status;
 import com.google.gson.Gson;
 
 import br.com.sisalfa.DAO.ContextDAOJDBC;
+import br.com.sisalfa.DAO.JDBCDAOFactory;
 import br.com.sisalfa.model.Context;
 
 @Path("context")
 public class ContextService {
 
-	private ContextDAOJDBC contextBD = new ContextDAOJDBC();
+	private JDBCDAOFactory factory = new JDBCDAOFactory();
+	private ContextDAOJDBC contextBD = factory.createContextDAO();
 	private Gson gson = new Gson();
 
 	@GET
@@ -50,7 +52,7 @@ public class ContextService {
 	}
 
 	@GET
-	@Path("getContextFromUser/{idUser}")
+	@Path("getContextsFromUser/{idUser}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getContextFromUser(@PathParam("idUser") int id) {
 		try {

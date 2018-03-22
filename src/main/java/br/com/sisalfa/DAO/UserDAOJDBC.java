@@ -1,5 +1,6 @@
 package br.com.sisalfa.DAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,27 +10,26 @@ import java.util.List;
 
 import br.com.sisalfa.model.User;
 
-public class UserDAOJDBC extends MySQLConection implements UserDAO {
+public class UserDAOJDBC implements UserDAO {
 
-	public void insert(User user) throws SQLException {
+	
+	public void insert(User user) {
 		String insertSQL = "insert into user(name) values(?)";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			PreparedStatement psmtm = conection.prepareStatement(insertSQL);
 			psmtm.setString(1, user.getName());
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
-				super.commit();
+				conection.commit();
 			else {
-				super.rollback();
+				conection.rollback();
 				throw new SQLException("Erro. Usuario nao Cadastrado!");
 			}
-			super.close();
-		} catch (ClassNotFoundException e) {
-			super.close();
+			conection.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public User getById(int id) throws SQLException {
@@ -43,9 +43,9 @@ public class UserDAOJDBC extends MySQLConection implements UserDAO {
 
 	public List<User> getAll() throws SQLException {
 		String selectSQL = "select * from user;";
+		List<User> users = new ArrayList<User>();
 		try {
-			super.connect();
-			List<User> users = new ArrayList<User>();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			User user = null;
 			Statement psmtm = conection.createStatement();
 			ResultSet resultset = psmtm.executeQuery(selectSQL);
@@ -55,10 +55,9 @@ public class UserDAOJDBC extends MySQLConection implements UserDAO {
 				user.setName(resultset.getString("name"));
 				users.add(user);
 			}
-			super.close();
+			conection.close();
 			return users;
-		} catch (ClassNotFoundException e) {
-			super.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -67,19 +66,19 @@ public class UserDAOJDBC extends MySQLConection implements UserDAO {
 	public void delete(int id) throws SQLException {
 		String deleteSQL = "delete from user where id = ?";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			PreparedStatement psmtm = conection.prepareStatement(deleteSQL);
 			psmtm.setInt(1, id);
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
-				super.commit();
+				conection.commit();
 			else {
-				super.rollback();
+				conection.rollback();
 				throw new SQLException("Erro. Usuario nao deletado!");
 			}
-			super.close();
-		} catch (ClassNotFoundException e) {
-			super.close();
+			conection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

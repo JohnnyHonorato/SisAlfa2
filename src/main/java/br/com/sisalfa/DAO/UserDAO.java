@@ -6,7 +6,7 @@ import br.com.sisalfa.model.User;
 
 public interface UserDAO {
 	
-	public void insert(User user) throws SQLException;
+	public void insert(User user);
 
 	public User getById(int id) throws SQLException;
 

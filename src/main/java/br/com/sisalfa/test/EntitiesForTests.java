@@ -10,18 +10,18 @@ import br.com.sisalfa.model.Challenge;
 import br.com.sisalfa.model.Context;
 import br.com.sisalfa.model.User;
 
-public class Entities {
+public class EntitiesForTests {
 
 	private User user;
 	private Context context;
 	private Challenge challenge;
 
-	public Entities() {
+	public EntitiesForTests() {
 		user = new User();
 		user.setName("Johnny");
 		context = new Context("Contexto1", user.getId());
 		challenge = new Challenge(user.getId(), context.getId(), "Desafio1");
-		challenge.setImage(returnImagen());
+		challenge.setImage(returnImagem());
 	}
 
 	public User getUser() {
@@ -36,7 +36,7 @@ public class Entities {
 		return challenge;
 	}
 	
-	private byte[] returnImagen() {
+	private byte[] returnImagem() {
 		byte[] img;
 		FileInputStream in;
 		File file = new File("/home/johnny/eclipse-workspace/sisalfa/src/test/GonGI.jpg"); 		

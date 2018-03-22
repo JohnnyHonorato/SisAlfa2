@@ -1,6 +1,6 @@
 package br.com.sisalfa.DAO;
 
-import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,13 +10,13 @@ import java.util.List;
 
 import br.com.sisalfa.model.Challenge;
 
-public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
+public class ChallengeDAOJDBC implements ChallengeDAO {
 
 
 	public void insert(Challenge challenge) throws SQLException {
 		String insertSQL = "insert into challenge(id_user, id_context, name, photo) values(?, ?, ?, ?)";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			PreparedStatement psmtm = conection.prepareStatement(insertSQL);
 			psmtm.setInt(1, challenge.getIdUser());
 			psmtm.setInt(2, challenge.getIdContext());
@@ -24,14 +24,13 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 			psmtm.setBytes(4, challenge.getImage());
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
-				super.commit();
+				conection.commit();
 			else {
-				super.rollback();
+				conection.rollback();
 				throw new SQLException("Erro. Desafio nao inserido!");
 			}
-			super.close();
-		} catch (ClassNotFoundException e) {
-			super.close();
+			conection.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -48,7 +47,7 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 	public List<Challenge> getAll() throws SQLException {
 		String selectSQL = "select * from challenge;";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			List<Challenge> challenges = new ArrayList<Challenge>();
 			Challenge challenge = null;
 			Statement psmtm = conection.createStatement();
@@ -60,10 +59,9 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 				challenge.setImage(resultset.getBytes("photo"));
 				challenges.add(challenge);
 			}
-			super.close();
+			conection.close();
 			return challenges;
-		} catch (ClassNotFoundException e) {
-			super.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -92,19 +90,19 @@ public class ChallengeDAOJDBC extends MySQLConection implements ChallengeDAO {
 	public void delete(int id) throws SQLException {
 		String deleteSQL = "delete from challenge where id = ?";
 		try {
-			super.connect();
+			Connection conection = MySQLConection.getInstance().abriConexao();
 			PreparedStatement psmtm = conection.prepareStatement(deleteSQL);
 			psmtm.setInt(1, id);
 			int rows = psmtm.executeUpdate();
 			if (rows > 0)
-				super.commit();
+				conection.commit();
 			else {
-				super.rollback();
+				conection.rollback();
 				throw new SQLException("Erro. Desafio nao deletado!");
 			}
-			super.close();
-		} catch (ClassNotFoundException e) {
-			super.close();
+			conection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

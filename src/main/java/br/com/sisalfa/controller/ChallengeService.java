@@ -15,13 +15,15 @@ import javax.ws.rs.core.Response.Status;
 import com.google.gson.Gson;
 
 import br.com.sisalfa.DAO.ChallengeDAOJDBC;
+import br.com.sisalfa.DAO.JDBCDAOFactory;
 import br.com.sisalfa.model.Challenge;
 
 
 @Path("challenge")
 public class ChallengeService {
 
-	private ChallengeDAOJDBC challengeBD = new ChallengeDAOJDBC();
+	JDBCDAOFactory factory = new JDBCDAOFactory();
+	private ChallengeDAOJDBC challengeBD = factory.createChallengeDAO();
 	private Gson gson = new Gson();
 
 	@GET
@@ -51,7 +53,7 @@ public class ChallengeService {
 	}
 
 	@GET
-	@Path("getChallengeFromUser/{id}")
+	@Path("getChallengesFromUser/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getChallengeFromUser(@PathParam("id") int id) {
 		try {
@@ -65,7 +67,7 @@ public class ChallengeService {
 	}
 
 	@GET
-	@Path("getChallengeFromContext/{id}")
+	@Path("getChallengesFromContext/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getChallengeFromContext(@PathParam("id") int id) {
 		try {
